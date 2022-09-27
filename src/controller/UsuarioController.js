@@ -107,7 +107,7 @@ module.exports = {
     }
 
     const usuario = await Usuario.findByIdAndUpdate({_id}, dataCreate);
-    return res.status(401).json({msg: "Dados atualizados com sucesso!"});
+    return res.status(200).json({msg: "Dados atualizados com sucesso!"});
   },
 
   async delete(req, res) {
