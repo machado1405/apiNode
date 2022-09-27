@@ -2,14 +2,14 @@
   "name": "apirest",
   "version": "1.0.0",
   "description": "Projeto node, com rotas e banco de dados",
-  "main": "server.js",
+  "main": "index.js",
   "engines": {
     "node": "16.x"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "Matheus Machado",
   "license": "ISC",
