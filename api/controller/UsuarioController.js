@@ -6,7 +6,7 @@ const usuario = require("../model/Usuario");
 module.exports = {
   async index(req, res) {
     const usuario = await Usuario.find();
-    res.status(200).json(usuario);
+    return res.status(200).json(usuario);
   },
 
   async detail(req, res) {
@@ -19,7 +19,7 @@ module.exports = {
     }
     
     const usuario = await Usuario.findOne({_id});
-    res.status(200).json(usuario);
+    return res.status(200).json(usuario);
   },
 
   async store(req, res) {
@@ -120,6 +120,6 @@ module.exports = {
     }
 
     const usuario = await Usuario.findByIdAndDelete({_id});
-    res.status(200).json({message: "Usuário deletado com sucesso!"});
+    return res.status(200).json({message: "Usuário deletado com sucesso!"});
   },
 }
