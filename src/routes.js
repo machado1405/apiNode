@@ -6,8 +6,13 @@ const routes = express.Router();
  * Rota home da API
  * return @json
  */
-routes.get("/", (req, res) => {
-  res.status(200).json({msg: "Bem vindo a API..."});
+routes.get("/", async (req, res) => {
+  try {
+    res.status(200).json({msg: "Bem vindo a API..."});
+  }catch(error) {
+    console.log(error);
+    return res.status(500).send("Erro no servidor!");
+  }
 });
 
 /**
