@@ -1,6 +1,7 @@
 const express = require("express");
 const UsuarioController = require("./controller/UsuarioController");
 const routes = express.Router();
+require("dotenv").config();
 
 /**
  * Rota home da API

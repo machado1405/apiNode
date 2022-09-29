@@ -17,13 +17,13 @@ const dbPassword = process.env.DB_PASSWORD;
 /**
  * Conexão com o banco de dados
  */
-const port = process.env.PORT
-mongoose
+const port = process.env.PORT || 5050;
+app.listen(port, () => {
+  console.log("Servidor iniciado...");
+  mongoose
   .connect(`mongodb+srv://${dbUser}:${dbPassword}@apinode.gf9ioht.mongodb.net/?retryWrites=true&w=majority`)
   .then(() => {
   console.log("Conectado com sucesso ao banco de dados!");
-  app.listen(port, () => {
-    console.log("Servidor iniciado...");
-  });
   })
   .catch(err => console.log(err));
+});
