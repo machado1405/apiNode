@@ -1,4 +1,5 @@
 const express = require("express");
+const SenhaController = require("./controller/SenhaController");
 const UsuarioController = require("./controller/UsuarioController");
 const routes = express.Router();
 require("dotenv").config();
@@ -21,11 +22,12 @@ routes.get("/", async (req, res) => {
  * return @json
  * rotas com nomes iguais, porem verbos diferentes
  * node aceita e diferencia
- */
-routes.get("/usuario", UsuarioController.index);
+*/
 routes.get("/usuario/:_id", UsuarioController.detail);
 routes.post("/usuario", UsuarioController.store);
 routes.put("/usuario", UsuarioController.update);
+routes.post("/usuario/login", UsuarioController.login);
 routes.delete("/usuario/:_id", UsuarioController.delete);
+routes.put("/alterarSenha", SenhaController.alterarSenha);
 
 module.exports = routes;

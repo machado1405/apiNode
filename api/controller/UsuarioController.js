@@ -1,14 +1,28 @@
 const Usuario = require("../model/Usuario");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const usuario = require("../model/Usuario");
+const encriptaSenha = require("../helpers/encriptaSenha");
+
+/**
+ * Valida o token
+*/
+function checkToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ msg: "Acesso negado!" });
+  }
+
+  try {
+    const secret = process.env.SECRET;
+    jwt.verify(token, secret);
+    next();
+  }catch(error) {
+    res.status(400).json( {msg: "Token inválido!"} );
+  }
+}
 
 module.exports = {
-  async index(req, res) {
-    const usuario = await Usuario.find();
-    return res.status(200).json(usuario);
-  },
-
   async detail(req, res) {
     const {_id} = req.params
 
@@ -57,8 +71,7 @@ module.exports = {
       return res.status(422).json({msg: "Usuário já cadastrado!"});
     }
 
-    const salt = await bcrypt.genSalt(12);
-    const senhaHash = await bcrypt.hash(senha, salt);
+    const senhaHash = await encriptaSenha(senha);
 
     let dataCreate = {};
     dataCreate = {
@@ -79,7 +92,7 @@ module.exports = {
     /**
      * Validações dos dados
     */
-      if(!nome) {
+    if(!nome) {
       return res.status(422).json({msg: "O nome é um campo obrigatório!"});
     }
 
@@ -122,4 +135,51 @@ module.exports = {
     const usuario = await Usuario.findByIdAndDelete({_id});
     return res.status(200).json({message: "Usuário deletado com sucesso!"});
   },
+
+  async login(req, res) {
+    const { email, senha } = req.body;
+
+    if(!email) {
+      return res.status(422).json({msg: "O email é um campo obrigatório"});
+    }
+  
+    if(!senha) {
+      return res.status(422).json({msg: "A senha é um campo obrigatório"});
+    }
+
+    /**
+     * Verificar se o usuário existe
+    */
+    const user = await Usuario.findOne({ email: email });
+
+    if(!user) {
+      return res.status(404).json({msg: "Usuário não encontrado!"});
+    }
+
+    /**
+     * Verificar senha
+    */
+    const checkPassword = await bcrypt.compare(senha, user.senha);
+
+    if(!checkPassword) {
+      return res.status(422).json({msg: "Senha incorreta!"});
+    }
+
+    /**
+     * Logar usuário
+    */
+    try{
+      const secret = process.env.SECRET;
+      const token = jwt.sign({
+        id: user._id,
+      },
+      secret,
+    );
+
+    res.status(200).json({ msg: "Logado com sucesso!", token });
+    }catch(error) {
+      console.log(error);
+      res.status(500).json({msg: "Erro no servidor, tente novamente mais tarde!"});
+    }
+  }
 }

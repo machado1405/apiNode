@@ -18,6 +18,7 @@ const dbPassword = process.env.DB_PASSWORD;
  * Conexão com o banco de dados
  */
 const port = process.env.PORT || 5050;
+
 app.listen(port, () => {
   console.log("Servidor iniciado...");
   mongoose
